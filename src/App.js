@@ -3,19 +3,12 @@ import './App.css';
 import Movies from './data'
 import { useState, useEffect } from 'react';
 
-
-{/* IMAGES */ }
-
 import logo from './assets/images/logo.svg';
 import person from './assets/images/person-illustration.svg';
 import botaoMenos from './assets/images/minus-icon.svg';
 import botaoMais from './assets/images/plus-icon.svg';
 import sacolinha from './assets/images/sacolinha.svg';
 import searchIcon from './assets/images/search-icon.svg';
-
-
-
-
 
 function App() {
 
@@ -24,22 +17,22 @@ function App() {
   const [suggestionList, setSuggestionList] = useState([]);
   const [valorDoCarrinho, setValorDoCarrinho] = useState([]);
 
-
-
-  //* FUNÇÃO VALOR DO CARRINHO
-
   useEffect(() => {
     const arrayLocal = [...addFilmeSacola];
 
     if (!arrayLocal.length) {
-      return
+      return;
     }
-    const soma = arrayLocal.reduce((acumulador, item) => { return (acumulador + item.price) });
-    console.log(soma);
+
+    let initialValue = 0;
+    const sum = arrayLocal.reduce((accumulator, currentValue) => {
+      return accumulator + (currentValue.price * currentValue.quantidade)
+    }, initialValue);
+
+    setValorDoCarrinho(sum.toFixed(2));
 
   }, [addFilmeSacola]);
 
-  //*BUSCA DE FILMES
   const handleChange = event => {
     setSearchText(event.target.value);
 
@@ -47,16 +40,12 @@ function App() {
       movie.title.toLowerCase().includes(searchText.toLowerCase())
     );
 
-
     if (filteredMovies) {
-      setSuggestionList(
-        filteredMovies
-      );
+      setSuggestionList(filteredMovies);
     };
   };
 
 
-  //*FUNÇÃO DE ADICIONAR NA SACOLA
   function AdicionarCard(movieCart) {
     const localArray = [...addFilmeSacola];
 
@@ -67,7 +56,6 @@ function App() {
   }
 
 
-  //*FUNÇÃO DE ADICIONAR NA SACOLA
   function RemoverCard(movieCart) {
     const localArray = [...addFilmeSacola];
 
@@ -82,7 +70,6 @@ function App() {
   }
 
 
-  //*FUNÇÃO PARA ADIÇÃO DE ITEM NA SACOLA COM QUANTIDADE SETADA
   function Sacola(title) {
     const filme = Movies.filter(filme => filme.title === title);
 
@@ -100,22 +87,26 @@ function App() {
   }
 
 
-
   return (
     <div className="App">
       <header>
         <div className="filterHeader">
           <img src={logo} alt="Logo" />
           <div className="inputHeader">
-            <input id="input1" type="text" placeholder="Procure um filme..." onChange={(event) => handleChange(event)} />
+            <input
+              id="input1"
+              type="text"
+              placeholder="Procure um filme..."
+              onChange={(event) => handleChange(event)}
+              onBlur={() => setSuggestionList(null)} />
             {suggestionList && (
               <ul>
                 {
                   suggestionList.map((movie) =>
-                  (<li>
-                    <img src={movie.poster_path} />
-                    {movie.title}
-                  </li>)
+                    <li key={movie.id}>
+                      <img src={movie.poster_path} />
+                      {movie.title}
+                    </li>
                   )
                 }
               </ul>
@@ -133,19 +124,17 @@ function App() {
         <div className="filmes-body">
           <p>Top Filmes</p>
           <div className="card-topfilmes">
-            {Movies.map((Movie, index) => {
-              if (index < 5) {
-                return (
-                  <Card
-                    title={Movie.title}
-                    poster_path={Movie.poster_path}
-                    vote_average={Movie.vote_average}
-                    price={Movie.price}
-                    addCarrinho={Sacola}
-                  />
-                )
-              }
-            })}
+            {Movies.map((Movie, index) => (
+              index < 5 &&
+              <Card
+                key={Movie.id}
+                title={Movie.title}
+                poster_path={Movie.poster_path}
+                vote_average={Movie.vote_average}
+                price={Movie.price}
+                addCarrinho={Sacola}
+              />
+            ))}
           </div>
 
           <p>Filmes</p>
@@ -153,6 +142,7 @@ function App() {
             {Movies.map(Movie => {
               return (
                 <Card
+                  key={Movie.id}
                   title={Movie.title}
                   poster_path={Movie.poster_path}
                   vote_average={Movie.vote_average}
@@ -171,47 +161,44 @@ function App() {
           <div className="itens-carrinho">
             {addFilmeSacola.length ? (
               <>
-                {addFilmeSacola.map((movieCart) => {
-                  return (
-                    <>
-                      <div className="cards-carrinho">
-                        <div className="cards-carrinho-wrapper">
-                          <img src={movieCart.poster_path} />
-                          <div className="texto-cards-carrinho">
-                            <h4>{movieCart.title}</h4>
-                            <p>R$ {movieCart.price.toFixed(2)}</p>
-                          </div>
-                        </div>
-                        <div className="button-cards-carrinho">
-                          <button
-                            onClick={() => RemoverCard(movieCart)}
-                            type="button">
-                            <img src={botaoMenos} alt="-" />
-                          </button>
-                          <p> {movieCart.quantidade}</p>
-                          <button
-                            onClick={() => AdicionarCard(movieCart)}
-                            type="button">
-                            <img src={botaoMais} alt="+" />
-                          </button>
+                {addFilmeSacola.map((movieCart) => (
+                  <>
+                    <div className="cards-carrinho" key={movieCart.id}>
+                      <div className="cards-carrinho-wrapper">
+                        <img src={movieCart.poster_path} />
+                        <div className="texto-cards-carrinho">
+                          <h4>{movieCart.title}</h4>
+                          <p>R$ {movieCart.price.toFixed(2)}</p>
                         </div>
                       </div>
-                    </>
-                  )
-                })}
+                      <div className="button-cards-carrinho">
+                        <button
+                          onClick={() => RemoverCard(movieCart)}
+                          type="button">
+                          <img src={botaoMenos} alt="-" />
+                        </button>
+                        <p> {movieCart.quantidade}</p>
+                        <button
+                          onClick={() => AdicionarCard(movieCart)}
+                          type="button">
+                          <img src={botaoMais} alt="+" />
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                ))}
                 <button className="button-carrinho2">
                   <p>Confirme seus dados</p>
-                  <p>R$ {() => valorTotal(movieCart)}</p>
+                  <p>R$ {valorDoCarrinho}</p>
                 </button>
-
               </>
-            ) : (
+            ) :
               <>
                 <h3>Sua sacola está vazia</h3>
                 <p>Adicione filmes agora</p>
                 <img src={person} />
               </>
-            )}
+            }
           </div>
         </div>
       </div >
