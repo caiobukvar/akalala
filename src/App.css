@@ -186,12 +186,22 @@ header {
     width: 180px;
     margin-bottom: 10px;
     padding: 0px 15px;
-    background-color: #A785ED;
+    background-color: #E25EBF;
     color: #EEE5FF;
     font-weight: 700;
     font-size: 14px;
     border-radius: 5px;
     border: none;
+}
+
+.button-carrinho:hover {
+    background: linear-gradient(0deg, rgba(225, 123, 123, 0.45), rgba(225, 123, 123, 0.45)), #FFB6EB;
+    box-shadow: 0px 16px 24px -12px rgba(226, 94, 191, 0.16);
+}
+
+.button-carrinho:active {
+    background: linear-gradient(0deg, rgba(225, 123, 123, 0.6), rgba(225, 123, 123, 0.6)), #FFB6EB;
+    box-shadow: 0px 16px 24px -12px rgba(226, 94, 191, 0.5);
 }
 
 .button-carrinho2 {
@@ -201,7 +211,7 @@ header {
     height: 40px;
     width: 280px;
     padding: 0px 15px;
-    background-color: #A785ED;
+    background-color: #E25EBF;
     color: #EEE5FF;
     font-weight: 700;
     font-size: 14px;
