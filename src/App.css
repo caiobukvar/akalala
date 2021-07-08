@@ -192,6 +192,7 @@ header {
     font-size: 14px;
     border-radius: 5px;
     border: none;
+    cursor: pointer;
 }
 
 .button-carrinho:hover {
@@ -308,6 +309,7 @@ header {
 .button-cards-carrinho button img {
     width: 20px;
     height: 20px;
+    cursor: pointer;
 }
 
 .button-cards-carrinho p {
